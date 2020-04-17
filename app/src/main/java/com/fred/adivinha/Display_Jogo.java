@@ -15,47 +15,55 @@ public class Display_Jogo extends AppCompatActivity {
     private Random random = new Random();
     public int numeroAdivinhar = random.nextInt(10) + 1;
     public int tentativas = 0;
+    public boolean venceu = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display__jogo);
-        Toast.makeText(this, "numero\n"+ numeroAdivinhar, Toast.LENGTH_SHORT).show(); // Mensagem informativa
+        //Toast.makeText(this, "numero\n"+ numeroAdivinhar, Toast.LENGTH_SHORT).show(); // Mensagem informativa
     }
-    /*
-    public class Ponto{
-        int x;
-        int y;
-
-        public void set(int novox, int novoy){
-            x = novox;
-            y = novoy;
-        }
-    }*/
 
     public void tentar(View view){
         EditText numero_inserido = (EditText) findViewById(R.id.InsertNumber);
+        if(numero_inserido.length()==0){
+            numero_inserido.setError(numero_inserido.getHint());
+            numero_inserido.requestFocus();
+            return;
+        }
+
         int numero_selecionado = Integer.parseInt(numero_inserido.getText().toString());
         TextView ntentativas = findViewById(R.id.textViewTentativas);
-        //Button button = (Button)findViewById(R.id.buttonPlay);
+        Button button =  (Button)findViewById(R.id.buttonPlay);
 
-        /*if(button.getText().toString().equals(R.string.Restart)){
+        if(numero_selecionado < 0 || numero_selecionado > 10){
+            numero_inserido.setError(getString(R.string.inserir));
+            numero_inserido.requestFocus();
+            return;
+        }
+
+        if(venceu){
             button.setText(R.string.TryButon);
             numeroAdivinhar = random.nextInt(10) + 1;
             tentativas = 0;
             ntentativas.setText("" + tentativas);
+            venceu=false;
         }
         else
-            {*/
+            {
             tentativas++;
 
             if (numeroAdivinhar == numero_selecionado) { //verifica se acertou
                 ntentativas.setText("" + tentativas);
                 Toast.makeText(this, "numero de tentativas\n" + tentativas, Toast.LENGTH_SHORT).show(); // Mensagem informativa
-                //button.setText(R.string.Restart);
+                button.setText(R.string.Restart);
+                venceu=true;
             } else {
                 ntentativas.setText("" + tentativas);
-                ntentativas.requestFocus();
+
+                numero_inserido.setText("");
+                numero_inserido.requestFocus();
             }
-        //}
+        }
     }
 }
